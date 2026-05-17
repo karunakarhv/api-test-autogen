@@ -1,0 +1,2078 @@
+{
+  "info": {
+    "_postman_id": "068f218d-0374-45a0-8303-e189f84a4107",
+    "name": "Petstore API \u2014 Auto-Generated",
+    "description": "Auto-generated from OpenAPI spec by generate_postman.py\nVersion: 1.0.0\nTotal requests: 38",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{api_key}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "id": "949a6b31-2818-4959-ad37-9b2afa5e726b",
+      "name": "PET",
+      "item": [
+        {
+          "id": "4a2fc8dc-6f02-481c-9292-e48edf690642",
+          "name": "[happy_path] POST /pet \u2014 Add a new pet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c9f258ee-86a3-4fc5-90f7-fad7e29cc0a4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "38210755-890a-421f-bf49-1a0eede4b505",
+          "name": "[missing_required] POST /pet \u2014 Missing required field: name",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "04f479b1-d8a8-4a32-b071-448a8dd5a5ed",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "459299b7-a098-41be-93ed-f2a77cab5c20",
+          "name": "[missing_required] POST /pet \u2014 Missing required field: photoUrls",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "7f97f1e2-eaaf-42c3-9568-72910a0f16d9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b2bacadf-881d-4026-bd63-b4483b640c27",
+          "name": "[invalid_enum] POST /pet \u2014 Invalid enum in body field: status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "fa3d7e03-8c1c-4175-8a8f-1fdc010d583e",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "21937f98-8c6d-4d5c-a4ad-0f8c0a41bd88",
+          "name": "[no_auth] POST /pet \u2014 Request without authentication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a8f44810-6070-4511-b69c-a3b6c5f541bd",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "4bf651f8-0e01-40ed-b3fa-323b02d46531",
+          "name": "[happy_path] PUT /pet \u2014 Update an existing pet",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c758bc7b-2b82-4e22-83dd-4e45e4070d55",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "6c13beaa-f716-4aa5-ba5f-f7f17938e8da",
+          "name": "[missing_required] PUT /pet \u2014 Missing required field: name",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f4f05257-5ba0-4278-a0d9-3364d1423864",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "0d5465e5-0d3f-4803-be84-cdb908b45075",
+          "name": "[missing_required] PUT /pet \u2014 Missing required field: photoUrls",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "15166c7e-cdfd-48a9-8fee-0760f438ece7",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "22d63ffe-942f-419c-9978-0c683068cf27",
+          "name": "[invalid_enum] PUT /pet \u2014 Invalid enum in body field: status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "bac1adfd-5e9a-42a3-a6ed-9332c42c039f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "7732a09b-5665-4ef3-bd47-1858ed4d11e5",
+          "name": "[no_auth] PUT /pet \u2014 Request without authentication",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"name\": \"test_value\",\n  \"category\": \"test_value\",\n  \"photoUrls\": [\n    \"test_value\"\n  ],\n  \"tags\": [\n    \"test_value\"\n  ],\n  \"status\": \"available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/pet",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b4fb7f6e-0e1e-4200-bf3e-016ff7ea2d92",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b9641513-62ec-48f2-8aac-6afde821ba98",
+          "name": "[happy_path] GET /pet/findByStatus \u2014 Finds Pets by status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/findByStatus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "findByStatus"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "014400b4-3a24-4ae7-b32b-538ae2f4454b",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "da280f9d-7d6c-486e-b9e2-b76792794249",
+          "name": "[invalid_enum] GET /pet/findByStatus \u2014 Invalid enum for param: status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/findByStatus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "findByStatus"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c67529c2-89be-4150-8b26-b6e894c2e342",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "5399277e-6f71-4950-beba-76b93cd6fbe2",
+          "name": "[no_auth] GET /pet/findByStatus \u2014 Request without authentication",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/findByStatus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "findByStatus"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "available",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "0f5142dc-98f5-4b30-958a-6391e88e3624",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "2d42a49c-a4f4-435c-bbb7-50dcae3c7834",
+          "name": "[happy_path] GET /pet/findByTags \u2014 Finds Pets by tags",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/findByTags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "findByTags"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "tags",
+                  "value": "test_value",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f2bc2af5-7b44-4776-b5bb-af498a3faf65",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "142315b1-8e40-4634-87aa-0681362746b8",
+          "name": "[no_auth] GET /pet/findByTags \u2014 Request without authentication",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/findByTags",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "findByTags"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "tags",
+                  "value": "test_value",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9cf13dc4-04f3-479e-810d-5ab49e37bba7",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "0025907a-e4de-4391-8b4f-28fa9dc16bda",
+          "name": "[happy_path] GET /pet/{petId} \u2014 Find pet by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a6332b28-ecd9-4abf-87c5-5df77ddbb5b8",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "fae431e5-020e-4116-abca-cee0814639a8",
+          "name": "[wrong_type] GET /pet/{petId} \u2014 Wrong type for param: petId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f939e6dd-b47f-49f3-a062-5b11bed4f51f",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "d7a5e915-76b0-418b-a683-5e8e29d6b382",
+          "name": "[no_auth] GET /pet/{petId} \u2014 Request without authentication",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "667a2fb5-a43e-47d1-9c40-fc6829e56030",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "52e2fbe2-755b-4107-b678-507845e36415",
+          "name": "[happy_path] POST /pet/{petId} \u2014 Updates a pet in the store with form data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "test_value",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "test_value",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "bb789ee8-611b-4c26-afcb-df37fbb14908",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "4ed16c7b-8b6f-4c44-93f9-6fcffa1e3d98",
+          "name": "[wrong_type] POST /pet/{petId} \u2014 Wrong type for param: petId",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "test_value",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "test_value",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8875dd33-6bb3-4419-8a83-85ba847a45e8",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "e9bec4a0-9417-4f56-92f0-dc3d814df86e",
+          "name": "[no_auth] POST /pet/{petId} \u2014 Request without authentication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "test_value",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "test_value",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4febd796-59c0-4faf-bbd8-027d070ebce8",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "6143089a-599f-4f9d-93b5-e820191c8d52",
+          "name": "[happy_path] DELETE /pet/{petId} \u2014 Deletes a pet",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d2b6b4a4-8141-4cbf-949a-f9f540d4cc00",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "7d1bd630-1a1e-4313-851a-4a405c7bf561",
+          "name": "[wrong_type] DELETE /pet/{petId} \u2014 Wrong type for param: petId",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "0352bceb-984a-44d0-acd3-7e2400105ab1",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "b8ac005e-6028-4ae9-8808-39e350f0aa8e",
+          "name": "[no_auth] DELETE /pet/{petId} \u2014 Request without authentication",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/pet/:petId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pet",
+                "{petId}"
+              ],
+              "variable": [
+                {
+                  "key": "petId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "268ec762-d026-422b-89bf-b7d006fa8172",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "80bcc5df-fedb-40a8-8ba7-f6c14e8b3aa4",
+      "name": "STORE",
+      "item": [
+        {
+          "id": "5c60f2d3-eaa7-452a-b132-25a2f8a0d1e5",
+          "name": "[happy_path] GET /store/inventory \u2014 Returns pet inventories by status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/store/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "inventory"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "6bc4219d-dd2e-4b62-9195-d19a757b8d37",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "71f2a4d1-ebd7-4368-a83d-6db1b5a61d96",
+          "name": "[no_auth] GET /store/inventory \u2014 Request without authentication",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "api_key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/store/inventory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "inventory"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4e064143-f2df-4c4a-892e-d839d4970d9d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "47d11194-fab4-4a0c-adde-b20d108490e8",
+          "name": "[happy_path] POST /store/order \u2014 Place an order for a pet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"petId\": \"10\",\n  \"quantity\": \"5\",\n  \"shipDate\": \"2026-05-22T15:45:00Z\",\n  \"status\": \"placed\",\n  \"complete\": \"true\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/store/order",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d60a1672-d727-445d-b5f6-62e02b7628cc",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dfa35be2-db5b-4da8-b4f2-95d08a6a5eb6",
+          "name": "[invalid_enum] POST /store/order \u2014 Invalid enum in body field: status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"petId\": \"10\",\n  \"quantity\": \"5\",\n  \"shipDate\": \"2026-05-22T15:45:00Z\",\n  \"status\": \"placed\",\n  \"complete\": \"true\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/store/order",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "59034731-d6c6-4ad3-937d-5d5dacb5fd6d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "7a5efc48-ef54-4b1c-9ac8-3f3f4b09f39e",
+          "name": "[happy_path] GET /store/order/{orderId} \u2014 Find purchase order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/store/order/:orderId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order",
+                "{orderId}"
+              ],
+              "variable": [
+                {
+                  "key": "orderId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5aec438d-b67f-4034-9a1b-ffaf00e75e13",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "c9b20732-ffdd-42d1-8c20-e58913ea9f2d",
+          "name": "[wrong_type] GET /store/order/{orderId} \u2014 Wrong type for param: orderId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/store/order/:orderId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order",
+                "{orderId}"
+              ],
+              "variable": [
+                {
+                  "key": "orderId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3c80dc41-4cb9-4e9d-b4e5-68a2827c9c6d",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbcd9972-28d8-44f5-b820-45eed6f1e4fe",
+          "name": "[happy_path] DELETE /store/order/{orderId} \u2014 Delete purchase order by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/store/order/:orderId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order",
+                "{orderId}"
+              ],
+              "variable": [
+                {
+                  "key": "orderId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "25dd5956-f3b7-4e80-9c4e-d852401c8ff5",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "c3f15c71-fc3d-4d48-9c8e-7e5f245d6003",
+          "name": "[wrong_type] DELETE /store/order/{orderId} \u2014 Wrong type for param: orderId",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/store/order/:orderId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "store",
+                "order",
+                "{orderId}"
+              ],
+              "variable": [
+                {
+                  "key": "orderId",
+                  "value": "10"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "031e5776-cc26-4e55-81ae-ab9cbb64de61",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 422\", function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ca7cf76c-c1f6-48e4-a55b-e446cdffeb6b",
+      "name": "USER",
+      "item": [
+        {
+          "id": "b0402075-1c44-45be-a5f4-42e626768a35",
+          "name": "[happy_path] POST /user \u2014 Create user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"username\": \"test_value\",\n  \"firstName\": \"test_value\",\n  \"lastName\": \"test_value\",\n  \"email\": \"test@example.com\",\n  \"password\": \"test_value\",\n  \"phone\": \"test_value\",\n  \"userStatus\": \"5\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "1da31c6e-f1c2-4dc3-a506-bd10956f40cd",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "1c50c3a8-22d2-448d-ad27-a1f84ec5c72b",
+          "name": "[happy_path] GET /user/login \u2014 Logs user into the system",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/user/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "login"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "test_value",
+                  "disabled": true
+                },
+                {
+                  "key": "password",
+                  "value": "test_value",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "b2dfdffa-5129-4eb3-ba49-a26270971191",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "73e49547-a22e-445c-a2a6-5d0f29c08017",
+          "name": "[happy_path] GET /user/logout \u2014 Logs out current logged in user session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/user/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "logout"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "57f0e4fd-eb4e-4580-8145-c6de78b03544",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "131bb4ed-b900-4fde-afc8-6f035691170c",
+          "name": "[happy_path] GET /user/{username} \u2014 Get user by username",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/user/:username",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{username}"
+              ],
+              "variable": [
+                {
+                  "key": "username",
+                  "value": "test_value"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9a417e94-95a0-4e76-84f8-c1e41451cbdf",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "46909547-09d7-4fa5-b037-71626437deb4",
+          "name": "[happy_path] PUT /user/{username} \u2014 Update user",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"10\",\n  \"username\": \"test_value\",\n  \"firstName\": \"test_value\",\n  \"lastName\": \"test_value\",\n  \"email\": \"test@example.com\",\n  \"password\": \"test_value\",\n  \"phone\": \"test_value\",\n  \"userStatus\": \"5\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/:username",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{username}"
+              ],
+              "variable": [
+                {
+                  "key": "username",
+                  "value": "test_value"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "7d78913d-acc7-4bba-b3a3-83fb49e466bd",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is valid JSON\", function () {",
+                  "    pm.response.to.be.json;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "91339030-3873-452e-bceb-c8469e9e38f9",
+          "name": "[happy_path] DELETE /user/{username} \u2014 Delete user",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{base_url}}/user/:username",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{username}"
+              ],
+              "variable": [
+                {
+                  "key": "username",
+                  "value": "test_value"
+                }
+              ],
+              "query": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "1678f828-51d4-4bed-b766-846b0e43f0e1",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response time < 3000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": []
+}
