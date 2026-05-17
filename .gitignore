@@ -218,4 +218,4 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Schemathesis Reports
-schemathesis-reports/*
+schemathesis-report/*.xml

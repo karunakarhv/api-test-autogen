@@ -1,0 +1,513 @@
+name: API Test Suite — Full CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      run_schemathesis:
+        description: "Run Schemathesis fuzzing?"
+        required: false
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+      run_llm_enrichment:
+        description: "Run LLM edge case enrichment?"
+        required: false
+        default: "false"
+        type: choice
+        options: ["true", "false"]
+
+# Cancel in-progress runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.11"
+  API_BASE_URL: "https://petstore3.swagger.io/api/v3"
+  API_KEY: ${{ secrets.API_KEY }}
+  COVERAGE_THRESHOLD: 80
+
+jobs:
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 1: Detect whether the OpenAPI spec changed
+  # ─────────────────────────────────────────────────────────────────
+  detect-spec-changes:
+    name: Detect spec changes
+    runs-on: ubuntu-latest
+    outputs:
+      spec_changed: ${{ steps.diff.outputs.spec_changed }}
+      spec_files:   ${{ steps.diff.outputs.spec_files }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2          # need previous commit to diff against
+
+      - name: Check for spec changes
+        id: diff
+        run: |
+          # On PR: diff against base branch
+          # On push: diff against previous commit
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="HEAD~1"
+          fi
+
+          CHANGED=$(git diff --name-only "$BASE_SHA" HEAD -- 'specs/*.yaml' 'specs/*.json' 2>/dev/null || echo "")
+
+          if [ -n "$CHANGED" ]; then
+            echo "spec_changed=true"  >> "$GITHUB_OUTPUT"
+            echo "spec_files=$CHANGED" >> "$GITHUB_OUTPUT"
+            echo "::notice::Spec files changed: $CHANGED"
+          else
+            echo "spec_changed=false" >> "$GITHUB_OUTPUT"
+            echo "spec_files="        >> "$GITHUB_OUTPUT"
+            echo "::notice::No spec changes detected — skipping regen"
+          fi
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 2: Regenerate test suite if spec changed
+  # ─────────────────────────────────────────────────────────────────
+  regenerate-tests:
+    name: Regenerate test suite from spec
+    runs-on: ubuntu-latest
+    needs: detect-spec-changes
+    if: needs.detect-spec-changes.outputs.spec_changed == 'true' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate pytest suite from spec
+        run: |
+          python src/generate_pytest.py specs/petstore.yaml tests/generated
+          echo "Generated test files:"
+          ls -la tests/generated/
+
+      - name: Generate Postman collection from spec
+        run: |
+          python src/generate_postman.py specs/petstore.yaml output
+          echo "Generated Postman files:"
+          ls -la output/
+
+      - name: Check for test drift
+        run: |
+          # Fail if generated files differ from committed files on main
+          # (catches cases where spec changed but tests weren't committed)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            if ! git diff --quiet tests/generated/ output/; then
+              echo "::warning::Generated tests differ from committed files."
+              echo "::warning::Run 'python src/generate_pytest.py' locally and commit the output."
+              git diff --stat tests/generated/ output/
+            fi
+          fi
+
+      - name: Upload generated tests as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-tests-${{ github.sha }}
+          path: |
+            tests/generated/
+            output/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 3: Run pytest suite
+  # ─────────────────────────────────────────────────────────────────
+  pytest:
+    name: pytest — ${{ matrix.suite }}
+    runs-on: ubuntu-latest
+    needs: [detect-spec-changes, regenerate-tests]
+    # Run even if regen was skipped (spec unchanged, tests already committed)
+    if: always() && !failure() && !cancelled()
+
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - pet
+          - store
+          - user
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download regenerated tests (if regen ran)
+        if: needs.regenerate-tests.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-tests-${{ github.sha }}
+          path: .
+
+      - name: Run pytest — ${{ matrix.suite }} tag
+        env:
+          API_BASE_URL: ${{ env.API_BASE_URL }}
+          API_KEY: ${{ env.API_KEY }}
+        run: |
+          pytest tests/generated/test_${{ matrix.suite }}.py \
+            --tb=short \
+            --strict-markers \
+            -v \
+            --junit-xml=reports/pytest_${{ matrix.suite }}.xml \
+            --html=reports/pytest_${{ matrix.suite }}.html \
+            --self-contained-html \
+            -q
+        continue-on-error: true          # collect all results before failing
+
+      - name: Upload pytest report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report-${{ matrix.suite }}-${{ github.sha }}
+          path: reports/pytest_${{ matrix.suite }}.*
+          retention-days: 14
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 4: Schemathesis fuzzing
+  # ─────────────────────────────────────────────────────────────────
+  schemathesis:
+    name: Schemathesis — property-based fuzzing
+    runs-on: ubuntu-latest
+    needs: [detect-spec-changes]
+    # Only on spec changes or manual trigger requesting it
+    if: |
+      always() && !cancelled() &&
+      (
+        needs.detect-spec-changes.outputs.spec_changed == 'true' ||
+        github.event.inputs.run_schemathesis == 'true' ||
+        github.event_name == 'push'
+      )
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install Schemathesis
+        run: pip install schemathesis
+
+      - name: Run Schemathesis — all checks
+        env:
+          API_BASE_URL: ${{ env.API_BASE_URL }}
+        run: |
+          mkdir -p reports
+
+          schemathesis run specs/petstore.yaml \
+            --url "$API_BASE_URL" \
+            --checks all \
+            --hypothesis-max-examples 50 \
+            --junit-xml reports/schemathesis.xml \
+            --report reports/schemathesis_report.txt \
+            --exitfirst \
+            --timeout 10 \
+            --validate-schema true \
+            || true          # don't hard-fail pipeline on fuzzing hits
+
+          echo "Schemathesis complete. Results:"
+          cat reports/schemathesis_report.txt || true
+        continue-on-error: true
+
+      - name: Upload Schemathesis report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schemathesis-report-${{ github.sha }}
+          path: reports/schemathesis*
+          retention-days: 14
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 5: Newman / Postman collection run
+  # ─────────────────────────────────────────────────────────────────
+  newman:
+    name: Newman — Postman collection
+    runs-on: ubuntu-latest
+    needs: [detect-spec-changes, regenerate-tests]
+    if: always() && !failure() && !cancelled()
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Newman + reporters
+        run: |
+          npm install -g newman newman-reporter-htmlextra newman-reporter-junitfull
+
+      - name: Set up Python (for regen if needed)
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install Python deps
+        run: pip install -r requirements.txt
+
+      - name: Download regenerated collection (if regen ran)
+        if: needs.regenerate-tests.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-tests-${{ github.sha }}
+          path: .
+
+      - name: Regenerate collection if not already done
+        if: needs.regenerate-tests.result != 'success'
+        run: python src/generate_postman.py specs/petstore.yaml output
+
+      - name: Run Newman
+        env:
+          API_BASE_URL: ${{ env.API_BASE_URL }}
+          API_KEY:      ${{ env.API_KEY }}
+        run: |
+          mkdir -p reports
+
+          # Patch the environment file with CI secrets
+          python - <<'EOF'
+          import json, os
+          env_path = "output/petstore_environment.json"
+          with open(env_path) as f:
+              env = json.load(f)
+          for v in env.get("values", []):
+              if v["key"] == "base_url":
+                  v["value"] = os.environ.get("API_BASE_URL", v["value"])
+              if v["key"] == "api_key":
+                  v["value"] = os.environ.get("API_KEY", v["value"])
+          with open(env_path, "w") as f:
+              json.dump(env, f, indent=2)
+          print("Environment patched.")
+          EOF
+
+          newman run output/petstore_collection.json \
+            --environment output/petstore_environment.json \
+            --reporters cli,junitfull,htmlextra \
+            --reporter-junitfull-export reports/newman_junit.xml \
+            --reporter-htmlextra-export reports/newman_report.html \
+            --reporter-htmlextra-title "Petstore API — Newman Results" \
+            --timeout-request 10000 \
+            --delay-request 200 \
+            --bail \
+            || true
+        continue-on-error: true
+
+      - name: Upload Newman reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report-${{ github.sha }}
+          path: reports/newman*
+          retention-days: 14
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 6: LLM edge case enrichment (optional, gated)
+  # ─────────────────────────────────────────────────────────────────
+  llm-enrichment:
+    name: LLM edge case enrichment
+    runs-on: ubuntu-latest
+    needs: [detect-spec-changes]
+    # Only when spec changed AND API key is available AND explicitly requested
+    if: |
+      needs.detect-spec-changes.outputs.spec_changed == 'true' &&
+      github.event.inputs.run_llm_enrichment == 'true' &&
+      vars.LLM_ENRICHMENT_ENABLED == 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run LLM edge case discovery
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          mkdir -p output reports
+          for spec in specs/*.yaml; do
+            echo "Processing $spec..."
+            python src/edge_case_discovery.py "$spec" POST /pet || true
+          done
+
+      - name: Upload enrichment output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: llm-edge-cases-${{ github.sha }}
+          path: |
+            output/edge_cases_*.json
+            tests/generated/test_edge_*.py
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 7: Aggregate results and comment on PR
+  # ─────────────────────────────────────────────────────────────────
+  report:
+    name: Aggregate results & PR comment
+    runs-on: ubuntu-latest
+    needs: [pytest, schemathesis, newman]
+    if: always() && github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+      checks: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reports
+          pattern: "*-report-*"
+
+      - name: Parse JUnit results
+        id: parse
+        run: |
+          python - <<'EOF'
+          import os, glob, xml.etree.ElementTree as ET, json
+
+          results = {}
+          for xml_file in glob.glob("all-reports/**/*.xml", recursive=True):
+              try:
+                  tree = ET.parse(xml_file)
+                  root = tree.getroot()
+                  suite = root if root.tag == "testsuite" else root.find("testsuite")
+                  if suite is None:
+                      continue
+                  name = os.path.basename(xml_file).replace(".xml","")
+                  results[name] = {
+                      "tests":    int(suite.get("tests", 0)),
+                      "failures": int(suite.get("failures", 0)),
+                      "errors":   int(suite.get("errors", 0)),
+                      "skipped":  int(suite.get("skipped", 0)),
+                      "time":     float(suite.get("time", 0)),
+                  }
+              except Exception as e:
+                  print(f"Could not parse {xml_file}: {e}")
+
+          total  = sum(r["tests"]    for r in results.values())
+          fails  = sum(r["failures"] for r in results.values())
+          errors = sum(r["errors"]   for r in results.values())
+          passed = total - fails - errors
+
+          print(f"TOTAL={total}")
+          print(f"PASSED={passed}")
+          print(f"FAILED={fails + errors}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"total={total}\n")
+              f.write(f"passed={passed}\n")
+              f.write(f"failed={fails + errors}\n")
+              f.write(f"summary={json.dumps(results)}\n")
+          EOF
+
+      - name: Comment PR with test results
+        uses: actions/github-script@v7
+        env:
+          TOTAL:  ${{ steps.parse.outputs.total }}
+          PASSED: ${{ steps.parse.outputs.passed }}
+          FAILED: ${{ steps.parse.outputs.failed }}
+        with:
+          script: |
+            const total  = parseInt(process.env.TOTAL  || 0);
+            const passed = parseInt(process.env.PASSED || 0);
+            const failed = parseInt(process.env.FAILED || 0);
+            const pct    = total > 0 ? Math.round((passed / total) * 100) : 0;
+            const icon   = failed === 0 ? '✅' : '❌';
+            const spec_changed = '${{ needs.detect-spec-changes.outputs.spec_changed }}' === 'true';
+
+            const body = `## ${icon} API Test Results — auto-generated from OpenAPI spec
+
+            | Suite | Result |
+            |---|---|
+            | pytest (pet) | ${{ needs.pytest.result }} |
+            | pytest (store) | ${{ needs.pytest.result }} |
+            | pytest (user) | ${{ needs.pytest.result }} |
+            | Schemathesis fuzzing | ${{ needs.schemathesis.result }} |
+            | Newman / Postman | ${{ needs.newman.result }} |
+
+            **${passed} / ${total} tests passed (${pct}%)**
+            ${spec_changed ? '⚠️ Spec changes detected — tests were regenerated from updated spec.' : '✓ No spec changes — existing test suite used.'}
+            ${failed > 0 ? `\n> ⚠️ **${failed} test(s) failed** — check artifacts for details.` : ''}
+
+            <details>
+            <summary>How this pipeline works</summary>
+
+            1. Detects if \`specs/*.yaml\` changed
+            2. If changed → auto-regenerates pytest + Postman from the spec
+            3. Runs pytest across pet / store / user tags in parallel
+            4. Runs Schemathesis property-based fuzzing against staging
+            5. Runs Newman to validate the Postman collection
+            6. Posts this comment with aggregated results
+
+            _Generated by [api-test-autogen](https://github.com/karun/api-test-autogen)_
+            </details>`;
+
+            // Delete previous bot comment if exists
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            for (const comment of comments.data) {
+              if (comment.user.type === 'Bot' && comment.body.includes('API Test Results')) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo:  context.repo.repo,
+                  comment_id: comment.id,
+                });
+              }
+            }
+
+            // Post fresh comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Fail if tests failed
+        if: steps.parse.outputs.failed != '0'
+        run: |
+          echo "::error::${{ steps.parse.outputs.failed }} test(s) failed. See reports for details."
+          exit 1

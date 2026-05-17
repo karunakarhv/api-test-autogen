@@ -1,0 +1,95 @@
+name: Spec Lint — fast check on every push
+
+on:
+  push:
+    paths:
+      - "specs/**"
+  pull_request:
+    paths:
+      - "specs/**"
+
+jobs:
+  lint-spec:
+    name: Lint OpenAPI spec
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install spec validator
+        run: pip install openapi-spec-validator pyyaml
+
+      - name: Validate all specs
+        run: |
+          python - <<'EOF'
+          import glob, sys
+          from openapi_spec_validator import validate_spec
+          from openapi_spec_validator.readers import read_from_filename
+
+          failed = []
+          for f in sorted(glob.glob("specs/*.yaml") + glob.glob("specs/*.json")):
+              try:
+                  spec, base = read_from_filename(f)
+                  validate_spec(spec)
+                  print(f"✓ {f}")
+              except Exception as e:
+                  print(f"✗ {f}: {e}")
+                  failed.append(f)
+
+          if failed:
+              print(f"\nFailed: {failed}")
+              sys.exit(1)
+          EOF
+
+      - name: Check for breaking changes (informational)
+        run: |
+          python - <<'EOF'
+          import yaml, sys, os, subprocess
+
+          # Get changed spec files
+          result = subprocess.run(
+              ["git", "diff", "--name-only", "HEAD~1", "HEAD", "--", "specs/"],
+              capture_output=True, text=True
+          )
+          changed = result.stdout.strip().split("\n") if result.stdout.strip() else []
+
+          for spec_file in changed:
+              if not os.path.exists(spec_file):
+                  continue
+              with open(spec_file) as f:
+                  spec = yaml.safe_load(f)
+
+              paths = spec.get("paths", {})
+              ops = [(path, m) for path, methods in paths.items()
+                     for m in methods if m in {"get","post","put","patch","delete"}]
+
+              print(f"\n{spec_file}: {len(ops)} operations")
+              for path, method in sorted(ops):
+                  print(f"  {method.upper():<8} {path}")
+          EOF
+
+      - name: Preview generated test count
+        run: |
+          pip install pyyaml -q
+          python - <<'EOF'
+          import sys, glob
+          sys.path.insert(0, "src")
+          from spec_parser import SpecParser
+
+          for spec_file in glob.glob("specs/*.yaml"):
+              try:
+                  p = SpecParser(spec_file)
+                  s = p.summary()
+                  print(f"{spec_file}: {s['endpoints']} endpoints → {s['total']} tests would be generated")
+                  for scenario, count in sorted(s["by_scenario"].items()):
+                      print(f"  {scenario:<22} {count}")
+              except Exception as e:
+                  print(f"Could not parse {spec_file}: {e}")
+          EOF
