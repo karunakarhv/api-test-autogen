@@ -27,7 +27,7 @@ concurrency:
 
 env:
   PYTHON_VERSION: "3.11"
-  API_BASE_URL: "https://petstore3.swagger.io/api/v3"
+  API_BASE_URL: "http://localhost:8080"
   API_KEY: ${{ secrets.API_KEY }}
   COVERAGE_THRESHOLD: 80
 
@@ -145,9 +145,36 @@ jobs:
           - store
           - user
 
+    # ── Local API server via Docker service container ──────────────
+    services:
+      api:
+        image: swaggerapi/petstore3:unstable   # replace with your own image
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 20s
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Wait for API to be ready
+        run: |
+          echo "Waiting for http://localhost:8080 ..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null 2>&1; then
+              echo "API is up (attempt $i)"
+              break
+            fi
+            echo "  attempt $i - not ready, retrying in 3s"
+            sleep 3
+          done
+          curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null \
+            || (echo "API never became ready" && exit 1)
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
@@ -204,9 +231,28 @@ jobs:
         github.event_name == 'push'
       )
 
+    services:
+      api:
+        image: swaggerapi/petstore3:unstable   # replace with your own image
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 20s
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Wait for API to be ready
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8080 > /dev/null 2>&1 && echo "API ready (attempt $i)" && break
+            sleep 3
+          done
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
@@ -255,6 +301,18 @@ jobs:
     needs: [detect-spec-changes, regenerate-tests]
     if: always() && !failure() && !cancelled()
 
+    services:
+      api:
+        image: swaggerapi/petstore3:unstable   # replace with your own image
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 20s
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -287,6 +345,13 @@ jobs:
       - name: Regenerate collection if not already done
         if: needs.regenerate-tests.result != 'success'
         run: python src/generate_postman.py specs/petstore.yaml output
+
+      - name: Wait for API to be ready
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8080 > /dev/null 2>&1 && echo "API ready (attempt $i)" && break
+            sleep 3
+          done
 
       - name: Run Newman
         env:

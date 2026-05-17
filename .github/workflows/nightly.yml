@@ -7,7 +7,7 @@ on:
 
 env:
   PYTHON_VERSION: "3.11"
-  API_BASE_URL: "https://petstore3.swagger.io/api/v3"
+  API_BASE_URL: "http://localhost:8080"
   API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
@@ -92,9 +92,28 @@ jobs:
     name: Full regression — all scenarios
     runs-on: ubuntu-latest
 
+    services:
+      api:
+        image: swaggerapi/petstore3:unstable   # replace with your own image
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+          --health-start-period 20s
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Wait for API to be ready
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8080 > /dev/null 2>&1 && echo "API ready (attempt $i)" && break
+            sleep 3
+          done
 
       - name: Set up Python
         uses: actions/setup-python@v5
