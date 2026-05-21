@@ -126,7 +126,7 @@ def format_responses(responses: dict) -> str:
 def call_llm(prompt: str) -> list[dict]:
     client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
     msg = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-haiku-4-5",
         max_tokens=2000,
         messages=[{"role": "user", "content": prompt}],
     )
