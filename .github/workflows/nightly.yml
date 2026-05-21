@@ -7,7 +7,7 @@ on:
 
 env:
   PYTHON_VERSION: "3.11"
-  API_BASE_URL: "http://localhost:8080"
+  API_BASE_URL: "http://localhost:8080/api/v3"
   API_KEY: ${{ secrets.API_KEY }}
 
 jobs:
