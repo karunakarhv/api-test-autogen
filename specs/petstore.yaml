@@ -43,7 +43,7 @@ paths:
 
     put:
       tags: [pet]
-      summary: Update an existing pet
+      summary: Update an existing pets
       operationId: updatePet
       security:
         - petstore_auth: [write:pets]
