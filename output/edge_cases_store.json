@@ -1,0 +1,122 @@
+[
+  {
+    "endpoint": "GET /store/inventory",
+    "name": "concurrent_requests_race_condition",
+    "description": "Test if simultaneous requests to /store/inventory return consistent inventory counts or expose race conditions in data retrieval.",
+    "input_hint": "Send 50+ concurrent GET requests and compare response values for consistency"
+  },
+  {
+    "endpoint": "GET /store/inventory",
+    "name": "missing_auth_token_endpoint_access",
+    "description": "Test if endpoint enforces authentication when no Authorization header is provided, even though params list is empty.",
+    "input_hint": "Send GET request without Authorization header and verify 401/403 response"
+  },
+  {
+    "endpoint": "GET /store/inventory",
+    "name": "extremely_large_response_payload",
+    "description": "Test if client can handle very large inventory response payloads without timeout, memory overflow, or truncation.",
+    "input_hint": "Verify response size limits and streaming behavior when inventory contains thousands of items"
+  },
+  {
+    "endpoint": "GET /store/inventory",
+    "name": "malformed_query_string_injection",
+    "description": "Test if endpoint properly rejects or sanitizes malformed query parameters like null bytes, unicode, or SQL injection patterns.",
+    "input_hint": "Append ?status=pending%00&filter=<script> and verify safe error handling"
+  },
+  {
+    "endpoint": "GET /store/inventory",
+    "name": "expired_auth_token_rejection",
+    "description": "Test if endpoint rejects requests with expired or invalid JWT/bearer tokens with appropriate error codes.",
+    "input_hint": "Send GET request with expired/revoked authentication token and verify 401 Unauthorized response"
+  },
+  {
+    "endpoint": "POST /store/order",
+    "name": "quantity_boundary_zero",
+    "description": "Verify that quantity value of 0 is rejected since minimum is 1.",
+    "input_hint": "quantity: 0"
+  },
+  {
+    "endpoint": "POST /store/order",
+    "name": "quantity_boundary_exceeded",
+    "description": "Verify that quantity value exceeding maximum of 100 is rejected.",
+    "input_hint": "quantity: 101"
+  },
+  {
+    "endpoint": "POST /store/order",
+    "name": "petid_negative_value",
+    "description": "Verify that negative petId is rejected since minimum is 1.",
+    "input_hint": "petId: -1"
+  },
+  {
+    "endpoint": "POST /store/order",
+    "name": "status_invalid_enum",
+    "description": "Verify that status values outside the allowed enum are rejected.",
+    "input_hint": "status: 'pending'"
+  },
+  {
+    "endpoint": "POST /store/order",
+    "name": "shipdate_invalid_format",
+    "description": "Verify that shipDate with invalid date-time format is rejected.",
+    "input_hint": "shipDate: '2024-13-45' or 'invalid-date'"
+  },
+  {
+    "endpoint": "GET /store/order/{orderId}",
+    "name": "order_id_below_minimum_boundary",
+    "description": "Validates that orderId values below the minimum constraint of 1 are properly rejected with appropriate error.",
+    "input_hint": "orderId = 0 or negative values like -1"
+  },
+  {
+    "endpoint": "GET /store/order/{orderId}",
+    "name": "order_id_above_maximum_boundary",
+    "description": "Validates that orderId values exceeding the maximum constraint of 10 are properly rejected with appropriate error.",
+    "input_hint": "orderId = 11 or larger values like 999999999"
+  },
+  {
+    "endpoint": "GET /store/order/{orderId}",
+    "name": "order_id_with_decimal_precision",
+    "description": "Validates behavior when orderId is provided as a decimal number instead of integer.",
+    "input_hint": "orderId = 5.5 or 5.0"
+  },
+  {
+    "endpoint": "GET /store/order/{orderId}",
+    "name": "order_id_as_string_numeric",
+    "description": "Validates type coercion handling when orderId is sent as a string representation of a number.",
+    "input_hint": "orderId = '5' (string) instead of 5 (integer)"
+  },
+  {
+    "endpoint": "GET /store/order/{orderId}",
+    "name": "concurrent_requests_same_order_id",
+    "description": "Validates system behavior and data consistency when multiple simultaneous requests are made for the same orderId.",
+    "input_hint": "Send 10+ concurrent GET requests with orderId=5 simultaneously"
+  },
+  {
+    "endpoint": "DELETE /store/order/{orderId}",
+    "name": "delete_order_with_zero_id",
+    "description": "Verify API rejects orderId of 0, which violates the minimum constraint of 1.",
+    "input_hint": "orderId = 0"
+  },
+  {
+    "endpoint": "DELETE /store/order/{orderId}",
+    "name": "delete_order_with_negative_id",
+    "description": "Verify API rejects negative orderId values that violate the minimum boundary constraint.",
+    "input_hint": "orderId = -1 or -999"
+  },
+  {
+    "endpoint": "DELETE /store/order/{orderId}",
+    "name": "delete_order_with_max_int64",
+    "description": "Verify API handles the maximum int64 value without overflow or unexpected behavior.",
+    "input_hint": "orderId = 9223372036854775807"
+  },
+  {
+    "endpoint": "DELETE /store/order/{orderId}",
+    "name": "delete_nonexistent_order_id",
+    "description": "Verify API response when attempting to delete an orderId that was never created or already deleted.",
+    "input_hint": "orderId = 999999999 (valid format but doesn't exist)"
+  },
+  {
+    "endpoint": "DELETE /store/order/{orderId}",
+    "name": "concurrent_delete_same_order",
+    "description": "Verify behavior when multiple simultaneous DELETE requests target the same orderId to detect race conditions.",
+    "input_hint": "Send 5+ parallel requests with same orderId"
+  }
+]

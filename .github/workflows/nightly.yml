@@ -2,7 +2,7 @@ name: Nightly — Spec Validation & Regression
 
 on:
   schedule:
-    - cron: "0 20 * * *"      # 6am AEDT (UTC+10) every day
+    - cron: "0 20 * * *"    # 6am AEDT (UTC+10) every day
   workflow_dispatch:
 
 env:
@@ -13,7 +13,7 @@ env:
 jobs:
 
   # ─────────────────────────────────────────────────────────────────
-  # Validate spec is still in sync with the live API
+  # Validate OpenAPI spec syntax
   # ─────────────────────────────────────────────────────────────────
   spec-validation:
     name: Validate OpenAPI spec
@@ -23,99 +23,91 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
 
-      - name: Install dependencies
-        run: pip install pyyaml openapi-spec-validator schemathesis
+      - name: Install validators
+        run: pip install pyyaml openapi-spec-validator
 
       - name: Validate spec syntax
         run: |
-          python - <<'EOF'
-          import sys
+          python - <<'PYEOF'
+          import sys, glob
           from openapi_spec_validator import validate_spec
           from openapi_spec_validator.readers import read_from_filename
-          import glob
 
           errors = []
-          for spec_file in glob.glob("specs/*.yaml") + glob.glob("specs/*.json"):
+          for spec_file in sorted(glob.glob("specs/*.yaml") + glob.glob("specs/*.json")):
               print(f"Validating {spec_file}...")
               try:
-                  spec_dict, base_uri = read_from_filename(spec_file)
+                  spec_dict, _ = read_from_filename(spec_file)
                   validate_spec(spec_dict)
-                  print(f"  ✓ {spec_file} is valid")
+                  print(f"  ✓ valid")
               except Exception as e:
-                  print(f"  ✗ {spec_file}: {e}")
-                  errors.append(str(e))
+                  print(f"  ✗ {e}")
+                  errors.append(spec_file)
 
           if errors:
-              print(f"\n{len(errors)} validation error(s) found.")
+              print(f"\n{len(errors)} spec(s) failed validation: {errors}")
               sys.exit(1)
           else:
               print("\nAll specs valid.")
-          EOF
+          PYEOF
 
-      - name: Check spec coverage (endpoints documented)
+      - name: Preview test count from spec
         run: |
-          python - <<'EOF'
-          import yaml, sys
-
-          with open("specs/petstore.yaml") as f:
-              spec = yaml.safe_load(f)
-
-          paths = spec.get("paths", {})
-          total_ops = sum(
-              1 for methods in paths.values()
-              for m in methods if m in {"get","post","put","patch","delete"}
-          )
-          ops_with_examples = sum(
-              1 for methods in paths.values()
-              for m, op in methods.items()
-              if m in {"get","post","put","patch","delete"}
-              and any(
-                  "example" in str(v) or "examples" in str(v)
-                  for v in op.get("requestBody", {}).values()
-              )
-          )
-          print(f"Total operations : {total_ops}")
-          print(f"With examples    : {ops_with_examples}")
-          print(f"Coverage         : {ops_with_examples/total_ops*100:.0f}%" if total_ops else "N/A")
-          EOF
+          pip install pyyaml -q
+          python - <<'PYEOF'
+          import sys, glob
+          sys.path.insert(0, "src")
+          from spec_parser import SpecParser
+          for spec_file in glob.glob("specs/*.yaml"):
+              p = SpecParser(spec_file)
+              s = p.summary()
+              print(f"\n{spec_file}: {s['endpoints']} endpoints → {s['total']} tests")
+              for scenario, count in sorted(s["by_scenario"].items()):
+                  print(f"  {scenario:<22} {count}")
+          PYEOF
 
   # ─────────────────────────────────────────────────────────────────
-  # Full regression run against staging
+  # Full regression against local Petstore container
+  # Image: swaggerapi/petstore3:unstable
+  # Source: https://github.com/swagger-api/swagger-petstore
   # ─────────────────────────────────────────────────────────────────
   nightly-regression:
     name: Full regression — all scenarios
     runs-on: ubuntu-latest
 
     services:
-      api:
-        image: swaggerapi/petstore3:unstable   # replace with your own image
+      petstore:
+        image: swaggerapi/petstore3:unstable
         ports:
           - 8080:8080
         options: >-
           --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 10
-          --health-start-period 20s
+          --health-retries 12
+          --health-start-period 30s
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Wait for API to be ready
+      - name: Wait for Petstore API
         run: |
           for i in $(seq 1 30); do
-            curl -sf http://localhost:8080 > /dev/null 2>&1 && echo "API ready (attempt $i)" && break
+            curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null 2>&1 \
+              && echo "✓ API ready (attempt $i)" && exit 0
+            echo "  attempt $i/30 — waiting 3s"
             sleep 3
           done
+          exit 1
 
-      - name: Set up Python
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -129,10 +121,10 @@ jobs:
           python src/generate_pytest.py specs/petstore.yaml tests/generated
           python src/generate_postman.py specs/petstore.yaml output
 
-      - name: Run full pytest suite — all scenarios
+      - name: Run full pytest suite
         env:
           API_BASE_URL: ${{ env.API_BASE_URL }}
-          API_KEY:      ${{ env.API_KEY }}
+          API_KEY: ${{ env.API_KEY }}
         run: |
           mkdir -p reports
           pytest tests/generated/ \
@@ -145,7 +137,7 @@ jobs:
             --timeout=30
         continue-on-error: true
 
-      - name: Nightly Schemathesis — deep fuzz (more examples)
+      - name: Nightly Schemathesis — deep fuzz (200 examples)
         env:
           API_BASE_URL: ${{ env.API_BASE_URL }}
         run: |
@@ -167,7 +159,7 @@ jobs:
           retention-days: 30
 
   # ─────────────────────────────────────────────────────────────────
-  # Alert on failures via Slack / email
+  # Notify on failure
   # ─────────────────────────────────────────────────────────────────
   notify:
     name: Notify on failure
@@ -188,7 +180,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "🔴 *Nightly API regression failed*\n*Repo:* ${{ github.repository }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>\n*Spec:* `specs/petstore.yaml`"
+                    "text": "🔴 *Nightly API regression failed*\n*Repo:* ${{ github.repository }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
                   }
                 }
               ]

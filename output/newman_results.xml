@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Petstore API — Auto-Generated" tests="38" time="0.081">
+  <testsuite name="PET / [happy_path] POST /pet — Add a new pet" id="c000dc8b-f005-47fe-a844-ad29dd0cebcf" timestamp="2026-05-21T12:43:00.294Z" tests="3" failures="0" errors="0" time="0.032">
+    <testcase name="Status code is 200" time="0.032" classname="PetHappyPathPostPetAddANewPet"/>
+    <testcase name="Response time &lt; 3000ms" time="0.032" classname="PetHappyPathPostPetAddANewPet"/>
+    <testcase name="Response is valid JSON" time="0.032" classname="PetHappyPathPostPetAddANewPet"/>
+  </testsuite>
+  <testsuite name="PET / [missing_required] POST /pet — Missing required field: name" id="1c52df60-d871-4e40-9ded-a34fcfb8194c" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 422" time="0.002" classname="PetMissingRequiredPostPetMissingRequiredFieldName">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [missing_required] POST /pet — Missing required field: name.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 200
+   at Object.eval sandbox-script.js:1:2).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetMissingRequiredPostPetMissingRequiredFieldName"/>
+  </testsuite>
+  <testsuite name="PET / [missing_required] POST /pet — Missing required field: photoUrls" id="1fe338ed-0fc9-4104-abab-2863c6615bf7" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 422" time="0.002" classname="PetMissingRequiredPostPetMissingRequiredFieldPhotoUrls">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [missing_required] POST /pet — Missing required field: photoUrls.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 200
+   at Object.eval sandbox-script.js:1:3).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetMissingRequiredPostPetMissingRequiredFieldPhotoUrls"/>
+  </testsuite>
+  <testsuite name="PET / [invalid_enum] POST /pet — Invalid enum in body field: status" id="42d844a1-1331-4b04-91e3-3e4ecc0a15e9" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 400" time="0.002" classname="PetInvalidEnumPostPetInvalidEnumInBodyFieldStatus">
+      <failure type="AssertionFailure" message="expected response to have status code 400 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [invalid_enum] POST /pet — Invalid enum in body field: status.]]>
+        <![CDATA[Test description: Status code is 400.]]>
+        <![CDATA[Error message: expected response to have status code 400 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 400 but got 200
+   at Object.eval sandbox-script.js:1:4).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetInvalidEnumPostPetInvalidEnumInBodyFieldStatus"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] POST /pet — Request without authentication" id="fcfe657e-b3b1-4fd0-bbf8-a9e5af1febe3" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 401" time="0.002" classname="PetNoAuthPostPetRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] POST /pet — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 200
+   at Object.eval sandbox-script.js:1:5).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetNoAuthPostPetRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="PET / [happy_path] PUT /pet — Update an existing pet" id="37f8713a-446c-4f89-94be-da98261efdd6" timestamp="2026-05-21T12:43:00.294Z" tests="3" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="PetHappyPathPutPetUpdateAnExistingPet"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetHappyPathPutPetUpdateAnExistingPet"/>
+    <testcase name="Response is valid JSON" time="0.001" classname="PetHappyPathPutPetUpdateAnExistingPet"/>
+  </testsuite>
+  <testsuite name="PET / [missing_required] PUT /pet — Missing required field: name" id="b3412bbc-a342-44be-a9e0-a0d9ff06daf5" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 422" time="0.001" classname="PetMissingRequiredPutPetMissingRequiredFieldName">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [missing_required] PUT /pet — Missing required field: name.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 200
+   at Object.eval sandbox-script.js:1:7).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetMissingRequiredPutPetMissingRequiredFieldName"/>
+  </testsuite>
+  <testsuite name="PET / [missing_required] PUT /pet — Missing required field: photoUrls" id="be30badd-2d38-4086-8d61-66a385283fcf" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 422" time="0.001" classname="PetMissingRequiredPutPetMissingRequiredFieldPhotoUrls">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [missing_required] PUT /pet — Missing required field: photoUrls.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 200
+   at Object.eval sandbox-script.js:1:8).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetMissingRequiredPutPetMissingRequiredFieldPhotoUrls"/>
+  </testsuite>
+  <testsuite name="PET / [invalid_enum] PUT /pet — Invalid enum in body field: status" id="4dae37a8-765d-42fb-9693-683886eb6c7d" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.003">
+    <testcase name="Status code is 400" time="0.003" classname="PetInvalidEnumPutPetInvalidEnumInBodyFieldStatus">
+      <failure type="AssertionFailure" message="expected response to have status code 400 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [invalid_enum] PUT /pet — Invalid enum in body field: status.]]>
+        <![CDATA[Test description: Status code is 400.]]>
+        <![CDATA[Error message: expected response to have status code 400 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 400 but got 200
+   at Object.eval sandbox-script.js:1:9).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.003" classname="PetInvalidEnumPutPetInvalidEnumInBodyFieldStatus"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] PUT /pet — Request without authentication" id="9bf1a448-a9ef-4fc6-ac39-5d792a492faf" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 401" time="0.002" classname="PetNoAuthPutPetRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] PUT /pet — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 200
+   at Object.eval sandbox-script.js:1:10).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetNoAuthPutPetRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="PET / [happy_path] GET /pet/findByStatus — Finds Pets by status" id="7c602b6c-f67d-4232-a908-72adc4cb3d27" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 200" time="0.002" classname="PetHappyPathGetPetFindByStatusFindsPetsByStatus">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [happy_path] GET /pet/findByStatus — Finds Pets by status.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:11).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetHappyPathGetPetFindByStatusFindsPetsByStatus"/>
+  </testsuite>
+  <testsuite name="PET / [invalid_enum] GET /pet/findByStatus — Invalid enum for param: status" id="7fb2dbdf-85d5-4abb-a641-1d28d46b9d1e" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 400" time="0.001" classname="PetInvalidEnumGetPetFindByStatusInvalidEnumForParamStatus"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetInvalidEnumGetPetFindByStatusInvalidEnumForParamStatus"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] GET /pet/findByStatus — Request without authentication" id="95897a2f-e7e0-48ae-9a33-edc8a9e60dd6" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 401" time="0.001" classname="PetNoAuthGetPetFindByStatusRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] GET /pet/findByStatus — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 400
+   at Object.eval sandbox-script.js:1:13).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetNoAuthGetPetFindByStatusRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="PET / [happy_path] GET /pet/findByTags — Finds Pets by tags" id="983959e5-ba8d-412f-8fb1-66fffa9ff0e8" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="PetHappyPathGetPetFindByTagsFindsPetsByTags">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [happy_path] GET /pet/findByTags — Finds Pets by tags.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:14).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetHappyPathGetPetFindByTagsFindsPetsByTags"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] GET /pet/findByTags — Request without authentication" id="a15e8a69-6b92-4146-9206-168a729ea79e" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 401" time="0.001" classname="PetNoAuthGetPetFindByTagsRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] GET /pet/findByTags — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 400
+   at Object.eval sandbox-script.js:1:15).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetNoAuthGetPetFindByTagsRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="PET / [happy_path] GET /pet/{petId} — Find pet by ID" id="f77c200f-509f-42a3-b9fd-43691cd9dbf5" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="PetHappyPathGetPetPetIdFindPetById">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [happy_path] GET /pet/{petId} — Find pet by ID.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:16).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetHappyPathGetPetPetIdFindPetById"/>
+  </testsuite>
+  <testsuite name="PET / [wrong_type] GET /pet/{petId} — Wrong type for param: petId" id="3ca8ff4f-3dfe-4dc6-9848-3f0dfd3e5d33" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 422" time="0.001" classname="PetWrongTypeGetPetPetIdWrongTypeForParamPetId">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [wrong_type] GET /pet/{petId} — Wrong type for param: petId.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 400
+   at Object.eval sandbox-script.js:1:17).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetWrongTypeGetPetPetIdWrongTypeForParamPetId"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] GET /pet/{petId} — Request without authentication" id="39bf2eac-9d11-4830-a3fc-d5ba3c6f5847" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 401" time="0.001" classname="PetNoAuthGetPetPetIdRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] GET /pet/{petId} — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 400
+   at Object.eval sandbox-script.js:1:18).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetNoAuthGetPetPetIdRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="PET / [happy_path] POST /pet/{petId} — Updates a pet in the store with form data" id="cbf1fa3e-ab02-42cd-9a07-1a870a7a9c2d" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="PetHappyPathPostPetPetIdUpdatesAPetInTheStoreWithFormData">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [happy_path] POST /pet/{petId} — Updates a pet in the store with form data.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:19).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetHappyPathPostPetPetIdUpdatesAPetInTheStoreWithFormData"/>
+  </testsuite>
+  <testsuite name="PET / [wrong_type] POST /pet/{petId} — Wrong type for param: petId" id="1ad359a7-eec0-4b1f-9609-e8e49f8abc10" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 422" time="0.001" classname="PetWrongTypePostPetPetIdWrongTypeForParamPetId">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [wrong_type] POST /pet/{petId} — Wrong type for param: petId.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 400
+   at Object.eval sandbox-script.js:1:20).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetWrongTypePostPetPetIdWrongTypeForParamPetId"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] POST /pet/{petId} — Request without authentication" id="6d7315c8-4239-4799-bc91-5c64e1a05c84" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 401" time="0.002" classname="PetNoAuthPostPetPetIdRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] POST /pet/{petId} — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 400
+   at Object.eval sandbox-script.js:1:21).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="PetNoAuthPostPetPetIdRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="PET / [happy_path] DELETE /pet/{petId} — Deletes a pet" id="881aa11e-0dcd-4a87-946f-9cf9d6a0c169" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="PetHappyPathDeletePetPetIdDeletesAPet">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [happy_path] DELETE /pet/{petId} — Deletes a pet.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:22).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetHappyPathDeletePetPetIdDeletesAPet"/>
+  </testsuite>
+  <testsuite name="PET / [wrong_type] DELETE /pet/{petId} — Wrong type for param: petId" id="0f629736-b427-4a00-aa2f-a7fe6f012959" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 422" time="0.001" classname="PetWrongTypeDeletePetPetIdWrongTypeForParamPetId">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [wrong_type] DELETE /pet/{petId} — Wrong type for param: petId.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 400
+   at Object.eval sandbox-script.js:1:23).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetWrongTypeDeletePetPetIdWrongTypeForParamPetId"/>
+  </testsuite>
+  <testsuite name="PET / [no_auth] DELETE /pet/{petId} — Request without authentication" id="1b4e4b4d-8adb-4bfb-81e3-4c8b03975ab9" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 401" time="0.001" classname="PetNoAuthDeletePetPetIdRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: PET / [no_auth] DELETE /pet/{petId} — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 400
+   at Object.eval sandbox-script.js:1:24).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="PetNoAuthDeletePetPetIdRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="STORE / [happy_path] GET /store/inventory — Returns pet inventories by status" id="eaf8f62e-5484-471b-bd1d-dabb88528006" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="StoreHappyPathGetStoreInventoryReturnsPetInventoriesByStatus"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="StoreHappyPathGetStoreInventoryReturnsPetInventoriesByStatus"/>
+  </testsuite>
+  <testsuite name="STORE / [no_auth] GET /store/inventory — Request without authentication" id="09d38dc6-927a-4f7b-a29c-a7391f3f99db" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 401" time="0.001" classname="StoreNoAuthGetStoreInventoryRequestWithoutAuthentication">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: STORE / [no_auth] GET /store/inventory — Request without authentication.]]>
+        <![CDATA[Test description: Status code is 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 200
+   at Object.eval sandbox-script.js:1:26).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="StoreNoAuthGetStoreInventoryRequestWithoutAuthentication"/>
+  </testsuite>
+  <testsuite name="STORE / [happy_path] POST /store/order — Place an order for a pet" id="79529a96-8469-4161-9a4a-4c78c7450d0d" timestamp="2026-05-21T12:43:00.294Z" tests="3" failures="0" errors="0" time="0.002">
+    <testcase name="Status code is 200" time="0.002" classname="StoreHappyPathPostStoreOrderPlaceAnOrderForAPet"/>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="StoreHappyPathPostStoreOrderPlaceAnOrderForAPet"/>
+    <testcase name="Response is valid JSON" time="0.002" classname="StoreHappyPathPostStoreOrderPlaceAnOrderForAPet"/>
+  </testsuite>
+  <testsuite name="STORE / [invalid_enum] POST /store/order — Invalid enum in body field: status" id="e90d46ac-fcae-446b-a51d-a67570725e8f" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 400" time="0.001" classname="StoreInvalidEnumPostStoreOrderInvalidEnumInBodyFieldStatus">
+      <failure type="AssertionFailure" message="expected response to have status code 400 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: STORE / [invalid_enum] POST /store/order — Invalid enum in body field: status.]]>
+        <![CDATA[Test description: Status code is 400.]]>
+        <![CDATA[Error message: expected response to have status code 400 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 400 but got 200
+   at Object.eval sandbox-script.js:1:28).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="StoreInvalidEnumPostStoreOrderInvalidEnumInBodyFieldStatus"/>
+  </testsuite>
+  <testsuite name="STORE / [happy_path] GET /store/order/{orderId} — Find purchase order by ID" id="a5fd8147-bdb2-47e5-8c26-45f2b107ad2e" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="StoreHappyPathGetStoreOrderOrderIdFindPurchaseOrderById">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: STORE / [happy_path] GET /store/order/{orderId} — Find purchase order by ID.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:29).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="StoreHappyPathGetStoreOrderOrderIdFindPurchaseOrderById"/>
+  </testsuite>
+  <testsuite name="STORE / [wrong_type] GET /store/order/{orderId} — Wrong type for param: orderId" id="e2c48cab-c3e3-4e65-bafe-de4a1b321615" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.002">
+    <testcase name="Status code is 422" time="0.002" classname="StoreWrongTypeGetStoreOrderOrderIdWrongTypeForParamOrderId">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: STORE / [wrong_type] GET /store/order/{orderId} — Wrong type for param: orderId.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 400
+   at Object.eval sandbox-script.js:1:30).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="StoreWrongTypeGetStoreOrderOrderIdWrongTypeForParamOrderId"/>
+  </testsuite>
+  <testsuite name="STORE / [happy_path] DELETE /store/order/{orderId} — Delete purchase order by ID" id="b9b7fec1-662d-435e-90df-9ae5ead9394c" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="StoreHappyPathDeleteStoreOrderOrderIdDeletePurchaseOrderById">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: STORE / [happy_path] DELETE /store/order/{orderId} — Delete purchase order by ID.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 400
+   at Object.eval sandbox-script.js:1:31).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="StoreHappyPathDeleteStoreOrderOrderIdDeletePurchaseOrderById"/>
+  </testsuite>
+  <testsuite name="STORE / [wrong_type] DELETE /store/order/{orderId} — Wrong type for param: orderId" id="c8eef9c0-3af7-4aa6-b983-1883fe54562e" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 422" time="0.001" classname="StoreWrongTypeDeleteStoreOrderOrderIdWrongTypeForParamOrderId">
+      <failure type="AssertionFailure" message="expected response to have status code 422 but got 400">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: STORE / [wrong_type] DELETE /store/order/{orderId} — Wrong type for param: orderId.]]>
+        <![CDATA[Test description: Status code is 422.]]>
+        <![CDATA[Error message: expected response to have status code 422 but got 400.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 422 but got 400
+   at Object.eval sandbox-script.js:1:32).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="StoreWrongTypeDeleteStoreOrderOrderIdWrongTypeForParamOrderId"/>
+  </testsuite>
+  <testsuite name="USER / [happy_path] POST /user — Create user" id="e84bf9fc-6931-482f-8a85-8a1faadd404e" timestamp="2026-05-21T12:43:00.294Z" tests="3" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="UserHappyPathPostUserCreateUser"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="UserHappyPathPostUserCreateUser"/>
+    <testcase name="Response is valid JSON" time="0.001" classname="UserHappyPathPostUserCreateUser"/>
+  </testsuite>
+  <testsuite name="USER / [happy_path] GET /user/login — Logs user into the system" id="b309e9e8-efca-40ba-9a1a-8551b51130e9" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="UserHappyPathGetUserLoginLogsUserIntoTheSystem"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="UserHappyPathGetUserLoginLogsUserIntoTheSystem"/>
+  </testsuite>
+  <testsuite name="USER / [happy_path] GET /user/logout — Logs out current logged in user session" id="acc90808-20bc-43dd-a2fb-274db12d714d" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="UserHappyPathGetUserLogoutLogsOutCurrentLoggedInUserSession"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="UserHappyPathGetUserLogoutLogsOutCurrentLoggedInUserSession"/>
+  </testsuite>
+  <testsuite name="USER / [happy_path] GET /user/{username} — Get user by username" id="e1fb4814-0555-444b-ab25-921fc6ce66f7" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="1" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="UserHappyPathGetUserUsernameGetUserByUsername">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: USER / [happy_path] GET /user/{username} — Get user by username.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 404
+   at Object.eval sandbox-script.js:1:36).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="UserHappyPathGetUserUsernameGetUserByUsername"/>
+  </testsuite>
+  <testsuite name="USER / [happy_path] PUT /user/{username} — Update user" id="e145f612-7c1c-494a-b5ba-25f906606f0c" timestamp="2026-05-21T12:43:00.294Z" tests="3" failures="2" errors="0" time="0.002">
+    <testcase name="Status code is 200" time="0.002" classname="UserHappyPathPutUserUsernameUpdateUser">
+      <failure type="AssertionFailure" message="expected response to have status code 200 but got 404">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: USER / [happy_path] PUT /user/{username} — Update user.]]>
+        <![CDATA[Test description: Status code is 200.]]>
+        <![CDATA[Error message: expected response to have status code 200 but got 404.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 200 but got 404
+   at Object.eval sandbox-script.js:1:37).]]>
+      </failure>
+    </testcase>
+    <testcase name="Response time &lt; 3000ms" time="0.002" classname="UserHappyPathPutUserUsernameUpdateUser"/>
+    <testcase name="Response is valid JSON" time="0.002" classname="UserHappyPathPutUserUsernameUpdateUser">
+      <failure type="AssertionFailure" message="expected response body to be a valid json but got error Unexpected token 'U' at 1:1">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 0e8697e8-d794-4e92-9f2a-0a65f65de0f2.]]>
+        <![CDATA[Collection name: Petstore API — Auto-Generated.]]>
+        <![CDATA[Request name: USER / [happy_path] PUT /user/{username} — Update user.]]>
+        <![CDATA[Test description: Response is valid JSON.]]>
+        <![CDATA[Error message: expected response body to be a valid json but got error Unexpected token 'U' at 1:1.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response body to be a valid json but got error Unexpected token 'U' at 1:1
+   at Object.eval sandbox-script.js:3:37).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="USER / [happy_path] DELETE /user/{username} — Delete user" id="6aef719c-a136-4bf5-ae84-4082d419cdfc" timestamp="2026-05-21T12:43:00.294Z" tests="2" failures="0" errors="0" time="0.001">
+    <testcase name="Status code is 200" time="0.001" classname="UserHappyPathDeleteUserUsernameDeleteUser"/>
+    <testcase name="Response time &lt; 3000ms" time="0.001" classname="UserHappyPathDeleteUserUsernameDeleteUser"/>
+  </testsuite>
+</testsuites>

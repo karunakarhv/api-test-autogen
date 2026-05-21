@@ -219,3 +219,7 @@ __marimo__/
 
 # Schemathesis Reports
 schemathesis-report/*.xml
+
+API_KEY.md
+tests/*
+CLAUDE.md

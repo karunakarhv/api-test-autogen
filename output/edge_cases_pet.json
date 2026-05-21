@@ -1,0 +1,212 @@
+[
+  {
+    "endpoint": "POST /pet",
+    "name": "id_boundary_negative_value",
+    "description": "Test that negative ID values are rejected when minimum constraint is 1.",
+    "input_hint": "id: -1 or id: 0"
+  },
+  {
+    "endpoint": "POST /pet",
+    "name": "name_length_boundary_exceeded",
+    "description": "Test that name strings exceeding maxLength of 100 characters are rejected.",
+    "input_hint": "name: string with 101+ characters"
+  },
+  {
+    "endpoint": "POST /pet",
+    "name": "name_empty_string_violation",
+    "description": "Test that empty name strings violate minLength constraint of 1.",
+    "input_hint": "name: ''"
+  },
+  {
+    "endpoint": "POST /pet",
+    "name": "photourls_empty_array_violation",
+    "description": "Test that empty photoUrls array violates minItems constraint of 1.",
+    "input_hint": "photoUrls: []"
+  },
+  {
+    "endpoint": "POST /pet",
+    "name": "special_characters_in_name",
+    "description": "Test that special characters, unicode, and escape sequences in name are handled correctly.",
+    "input_hint": "name: '<script>alert(1)</script>' or name: '\\x00\\x01' or name: emoji characters"
+  },
+  {
+    "endpoint": "PUT /pet",
+    "name": "id_minimum_boundary_violation",
+    "description": "Test that id values below the minimum of 1 are rejected or handled appropriately.",
+    "input_hint": "id: 0, id: -1, id: -9223372036854775808"
+  },
+  {
+    "endpoint": "PUT /pet",
+    "name": "name_length_boundary_violations",
+    "description": "Test that name field respects minLength of 1 and maxLength of 100 constraints.",
+    "input_hint": "name: '' (empty string), name with 101 characters, name with special chars like <script>, \" or null bytes"
+  },
+  {
+    "endpoint": "PUT /pet",
+    "name": "photourls_empty_array_violation",
+    "description": "Test that photoUrls array with minItems of 1 rejects empty arrays.",
+    "input_hint": "photoUrls: [], photoUrls: null, photoUrls: undefined"
+  },
+  {
+    "endpoint": "PUT /pet",
+    "name": "missing_required_fields",
+    "description": "Test behavior when required fields name and photoUrls are omitted from request body.",
+    "input_hint": "Request with only id provided, request with photoUrls but no name, completely empty body {}"
+  },
+  {
+    "endpoint": "PUT /pet",
+    "name": "invalid_enum_status_value",
+    "description": "Test that status field only accepts the defined enum values and rejects invalid statuses.",
+    "input_hint": "status: 'AVAILABLE' (uppercase), status: 'unavailable', status: '', status: 123"
+  },
+  {
+    "endpoint": "GET /pet/findByStatus",
+    "name": "null_status_parameter",
+    "description": "Test behavior when status parameter is explicitly set to null instead of omitted or using default value.",
+    "input_hint": "?status=null"
+  },
+  {
+    "endpoint": "GET /pet/findByStatus",
+    "name": "case_sensitivity_status_value",
+    "description": "Test whether status enum values are case-sensitive and reject 'Available', 'PENDING', or 'Sold'.",
+    "input_hint": "?status=Available or ?status=SOLD"
+  },
+  {
+    "endpoint": "GET /pet/findByStatus",
+    "name": "whitespace_in_status_parameter",
+    "description": "Test how the API handles status values with leading/trailing whitespace that don't match enum exactly.",
+    "input_hint": "?status=available%20 or ?status=%20pending"
+  },
+  {
+    "endpoint": "GET /pet/findByStatus",
+    "name": "multiple_status_parameters",
+    "description": "Test behavior when multiple status query parameters are provided instead of a single value.",
+    "input_hint": "?status=available&status=pending&status=sold"
+  },
+  {
+    "endpoint": "GET /pet/findByStatus",
+    "name": "invalid_enum_value_with_special_chars",
+    "description": "Test API response when status parameter contains special characters or SQL injection attempts.",
+    "input_hint": "?status=available'; DROP TABLE pets;-- or ?status=available<script>"
+  },
+  {
+    "endpoint": "GET /pet/findByTags",
+    "name": "empty_tags_array",
+    "description": "Test behavior when tags parameter is an empty array instead of omitted or populated.",
+    "input_hint": "tags=[]"
+  },
+  {
+    "endpoint": "GET /pet/findByTags",
+    "name": "tags_with_special_characters",
+    "description": "Test handling of special characters and URL encoding in tag values.",
+    "input_hint": "tags=['tag@#$%', 'tag&=+', 'tag<script>']"
+  },
+  {
+    "endpoint": "GET /pet/findByTags",
+    "name": "extremely_long_tag_string",
+    "description": "Test behavior with excessively long individual tag strings exceeding typical limits.",
+    "input_hint": "tags=['a' * 10000]"
+  },
+  {
+    "endpoint": "GET /pet/findByTags",
+    "name": "null_tag_values_in_array",
+    "description": "Test handling of null values within the tags array parameter.",
+    "input_hint": "tags=['valid_tag', null, 'another_tag']"
+  },
+  {
+    "endpoint": "GET /pet/findByTags",
+    "name": "duplicate_tags_in_array",
+    "description": "Test whether duplicate tag values are handled correctly and if results are deduplicated.",
+    "input_hint": "tags=['dog', 'cat', 'dog', 'dog']"
+  },
+  {
+    "endpoint": "GET /pet/{petId}",
+    "name": "petId_zero_boundary",
+    "description": "Verify endpoint rejects petId=0 when minimum is 1, testing lower boundary enforcement.",
+    "input_hint": "petId=0"
+  },
+  {
+    "endpoint": "GET /pet/{petId}",
+    "name": "petId_negative_integer",
+    "description": "Confirm negative petId values are rejected despite integer type accepting negatives.",
+    "input_hint": "petId=-1"
+  },
+  {
+    "endpoint": "GET /pet/{petId}",
+    "name": "petId_max_int64_overflow",
+    "description": "Test behavior when petId exceeds maximum int64 value (9223372036854775807).",
+    "input_hint": "petId=9223372036854775808"
+  },
+  {
+    "endpoint": "GET /pet/{petId}",
+    "name": "petId_float_precision_loss",
+    "description": "Verify endpoint handles large floating-point numbers that lose precision when cast to int64.",
+    "input_hint": "petId=9223372036854775806.9"
+  },
+  {
+    "endpoint": "GET /pet/{petId}",
+    "name": "missing_petId_parameter",
+    "description": "Confirm proper error response when required petId path parameter is omitted entirely.",
+    "input_hint": "GET /pet/ without {petId}"
+  },
+  {
+    "endpoint": "POST /pet/{petId}",
+    "name": "petid_boundary_max_int64",
+    "description": "Test petId parameter with maximum int64 value to verify boundary handling.",
+    "input_hint": "petId = 9223372036854775807"
+  },
+  {
+    "endpoint": "POST /pet/{petId}",
+    "name": "petid_boundary_negative_value",
+    "description": "Test petId parameter with negative integer to verify validation rejects invalid IDs.",
+    "input_hint": "petId = -1"
+  },
+  {
+    "endpoint": "POST /pet/{petId}",
+    "name": "name_query_special_characters",
+    "description": "Test name parameter with special characters and URL encoding edge cases.",
+    "input_hint": "name = 'Pet<>\"&\\%#@!'"
+  },
+  {
+    "endpoint": "POST /pet/{petId}",
+    "name": "status_empty_string_vs_null",
+    "description": "Test status parameter with empty string versus omitted parameter to detect null/missing handling differences.",
+    "input_hint": "status = '' (empty string) vs not including status param"
+  },
+  {
+    "endpoint": "POST /pet/{petId}",
+    "name": "concurrent_same_petid_updates",
+    "description": "Test race condition when multiple requests update the same petId simultaneously.",
+    "input_hint": "Send 10 concurrent POST requests to same petId with different name/status values"
+  },
+  {
+    "endpoint": "DELETE /pet/{petId}",
+    "name": "delete_pet_with_max_int64_id",
+    "description": "Test deletion with petId set to maximum int64 value (9223372036854775807) to verify boundary handling.",
+    "input_hint": "petId = 9223372036854775807"
+  },
+  {
+    "endpoint": "DELETE /pet/{petId}",
+    "name": "delete_pet_with_negative_id",
+    "description": "Test deletion with negative petId value to verify if API rejects or handles negative integers.",
+    "input_hint": "petId = -1"
+  },
+  {
+    "endpoint": "DELETE /pet/{petId}",
+    "name": "delete_pet_with_nonexistent_id",
+    "description": "Test deletion of a petId that exists syntactically but has never been created in the system.",
+    "input_hint": "petId = 999999999 (non-existent but valid format)"
+  },
+  {
+    "endpoint": "DELETE /pet/{petId}",
+    "name": "delete_pet_concurrent_requests",
+    "description": "Test simultaneous DELETE requests for the same petId to verify race condition handling and idempotency.",
+    "input_hint": "Send 5 concurrent DELETE requests with identical petId"
+  },
+  {
+    "endpoint": "DELETE /pet/{petId}",
+    "name": "delete_pet_missing_authorization_header",
+    "description": "Test DELETE request without required authentication credentials to verify auth edge case handling.",
+    "input_hint": "Omit Authorization header or send with invalid/expired token"
+  }
+]

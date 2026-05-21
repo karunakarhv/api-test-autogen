@@ -27,6 +27,8 @@ concurrency:
 
 env:
   PYTHON_VERSION: "3.11"
+  # swagger-api/swagger-petstore runs on port 8080
+  # Docs: https://github.com/swagger-api/swagger-petstore
   API_BASE_URL: "http://localhost:8080"
   API_KEY: ${{ secrets.API_KEY }}
   COVERAGE_THRESHOLD: 80
@@ -47,13 +49,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2          # need previous commit to diff against
+          fetch-depth: 2
 
       - name: Check for spec changes
         id: diff
         run: |
-          # On PR: diff against base branch
-          # On push: diff against previous commit
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_SHA="${{ github.event.pull_request.base.sha }}"
           else
@@ -108,8 +108,6 @@ jobs:
 
       - name: Check for test drift
         run: |
-          # Fail if generated files differ from committed files on main
-          # (catches cases where spec changed but tests weren't committed)
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             if ! git diff --quiet tests/generated/ output/; then
               echo "::warning::Generated tests differ from committed files."
@@ -129,52 +127,49 @@ jobs:
 
   # ─────────────────────────────────────────────────────────────────
   # JOB 3: Run pytest suite
+  # Image: swaggerapi/petstore3:unstable (swagger-api/swagger-petstore)
+  # Listens on port 8080, spec at /api/v3/openapi.json
   # ─────────────────────────────────────────────────────────────────
   pytest:
     name: pytest — ${{ matrix.suite }}
     runs-on: ubuntu-latest
     needs: [detect-spec-changes, regenerate-tests]
-    # Run even if regen was skipped (spec unchanged, tests already committed)
     if: always() && !failure() && !cancelled()
 
     strategy:
       fail-fast: false
       matrix:
-        suite:
-          - pet
-          - store
-          - user
+        suite: [pet, store, user]
 
-    # ── Local API server via Docker service container ──────────────
     services:
-      api:
-        image: swaggerapi/petstore3:unstable   # replace with your own image
+      petstore:
+        image: swaggerapi/petstore3:unstable
         ports:
           - 8080:8080
         options: >-
           --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 10
-          --health-start-period 20s
+          --health-retries 12
+          --health-start-period 30s
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Wait for API to be ready
+      - name: Wait for Petstore API
         run: |
-          echo "Waiting for http://localhost:8080 ..."
+          echo "Polling http://localhost:8080/api/v3/openapi.json ..."
           for i in $(seq 1 30); do
             if curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null 2>&1; then
-              echo "API is up (attempt $i)"
-              break
+              echo "✓ Petstore API ready on attempt $i"
+              exit 0
             fi
-            echo "  attempt $i - not ready, retrying in 3s"
+            echo "  attempt $i/30 — waiting 3s"
             sleep 3
           done
-          curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null \
-            || (echo "API never became ready" && exit 1)
+          echo "✗ Petstore API did not become ready in time"
+          exit 1
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
@@ -183,7 +178,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt pytest-html
 
       - name: Download regenerated tests (if regen ran)
         if: needs.regenerate-tests.result == 'success'
@@ -192,11 +187,12 @@ jobs:
           name: generated-tests-${{ github.sha }}
           path: .
 
-      - name: Run pytest — ${{ matrix.suite }} tag
+      - name: Run pytest — ${{ matrix.suite }}
         env:
           API_BASE_URL: ${{ env.API_BASE_URL }}
           API_KEY: ${{ env.API_KEY }}
         run: |
+          mkdir -p reports
           pytest tests/generated/test_${{ matrix.suite }}.py \
             --tb=short \
             --strict-markers \
@@ -205,7 +201,7 @@ jobs:
             --html=reports/pytest_${{ matrix.suite }}.html \
             --self-contained-html \
             -q
-        continue-on-error: true          # collect all results before failing
+        continue-on-error: true
 
       - name: Upload pytest report
         if: always()
@@ -216,13 +212,12 @@ jobs:
           retention-days: 14
 
   # ─────────────────────────────────────────────────────────────────
-  # JOB 4: Schemathesis fuzzing
+  # JOB 4: Schemathesis property-based fuzzing
   # ─────────────────────────────────────────────────────────────────
   schemathesis:
     name: Schemathesis — property-based fuzzing
     runs-on: ubuntu-latest
     needs: [detect-spec-changes]
-    # Only on spec changes or manual trigger requesting it
     if: |
       always() && !cancelled() &&
       (
@@ -232,27 +227,30 @@ jobs:
       )
 
     services:
-      api:
-        image: swaggerapi/petstore3:unstable   # replace with your own image
+      petstore:
+        image: swaggerapi/petstore3:unstable
         ports:
           - 8080:8080
         options: >-
           --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 10
-          --health-start-period 20s
+          --health-retries 12
+          --health-start-period 30s
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Wait for API to be ready
+      - name: Wait for Petstore API
         run: |
           for i in $(seq 1 30); do
-            curl -sf http://localhost:8080 > /dev/null 2>&1 && echo "API ready (attempt $i)" && break
+            curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null 2>&1 \
+              && echo "✓ API ready (attempt $i)" && exit 0
+            echo "  attempt $i/30 — waiting 3s"
             sleep 3
           done
+          exit 1
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
@@ -268,7 +266,6 @@ jobs:
           API_BASE_URL: ${{ env.API_BASE_URL }}
         run: |
           mkdir -p reports
-
           schemathesis run specs/petstore.yaml \
             --url "$API_BASE_URL" \
             --checks all \
@@ -278,9 +275,7 @@ jobs:
             --exitfirst \
             --timeout 10 \
             --validate-schema true \
-            || true          # don't hard-fail pipeline on fuzzing hits
-
-          echo "Schemathesis complete. Results:"
+            || true
           cat reports/schemathesis_report.txt || true
         continue-on-error: true
 
@@ -293,7 +288,7 @@ jobs:
           retention-days: 14
 
   # ─────────────────────────────────────────────────────────────────
-  # JOB 5: Newman / Postman collection run
+  # JOB 5: Newman — Postman collection run
   # ─────────────────────────────────────────────────────────────────
   newman:
     name: Newman — Postman collection
@@ -302,31 +297,30 @@ jobs:
     if: always() && !failure() && !cancelled()
 
     services:
-      api:
-        image: swaggerapi/petstore3:unstable   # replace with your own image
+      petstore:
+        image: swaggerapi/petstore3:unstable
         ports:
           - 8080:8080
         options: >-
           --health-cmd "wget -qO- http://localhost:8080/api/v3/openapi.json || exit 1"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 10
-          --health-start-period 20s
+          --health-retries 12
+          --health-start-period 30s
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Install Newman + reporters
-        run: |
-          npm install -g newman newman-reporter-htmlextra newman-reporter-junitfull
+        run: npm install -g newman newman-reporter-htmlextra newman-reporter-junitfull
 
-      - name: Set up Python (for regen if needed)
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -346,22 +340,22 @@ jobs:
         if: needs.regenerate-tests.result != 'success'
         run: python src/generate_postman.py specs/petstore.yaml output
 
-      - name: Wait for API to be ready
+      - name: Wait for Petstore API
         run: |
           for i in $(seq 1 30); do
-            curl -sf http://localhost:8080 > /dev/null 2>&1 && echo "API ready (attempt $i)" && break
+            curl -sf http://localhost:8080/api/v3/openapi.json > /dev/null 2>&1 \
+              && echo "✓ API ready (attempt $i)" && exit 0
+            echo "  attempt $i/30 — waiting 3s"
             sleep 3
           done
+          exit 1
 
-      - name: Run Newman
+      - name: Patch environment file with CI values
         env:
           API_BASE_URL: ${{ env.API_BASE_URL }}
-          API_KEY:      ${{ env.API_KEY }}
+          API_KEY: ${{ env.API_KEY }}
         run: |
-          mkdir -p reports
-
-          # Patch the environment file with CI secrets
-          python - <<'EOF'
+          python - <<'PYEOF'
           import json, os
           env_path = "output/petstore_environment.json"
           with open(env_path) as f:
@@ -374,8 +368,11 @@ jobs:
           with open(env_path, "w") as f:
               json.dump(env, f, indent=2)
           print("Environment patched.")
-          EOF
+          PYEOF
 
+      - name: Run Newman
+        run: |
+          mkdir -p reports
           newman run output/petstore_collection.json \
             --environment output/petstore_environment.json \
             --reporters cli,junitfull,htmlextra \
@@ -403,7 +400,6 @@ jobs:
     name: LLM edge case enrichment
     runs-on: ubuntu-latest
     needs: [detect-spec-changes]
-    # Only when spec changed AND API key is available AND explicitly requested
     if: |
       needs.detect-spec-changes.outputs.spec_changed == 'true' &&
       github.event.inputs.run_llm_enrichment == 'true' &&
@@ -467,7 +463,7 @@ jobs:
       - name: Parse JUnit results
         id: parse
         run: |
-          python - <<'EOF'
+          python - <<'PYEOF'
           import os, glob, xml.etree.ElementTree as ET, json
 
           results = {}
@@ -478,13 +474,12 @@ jobs:
                   suite = root if root.tag == "testsuite" else root.find("testsuite")
                   if suite is None:
                       continue
-                  name = os.path.basename(xml_file).replace(".xml","")
+                  name = os.path.basename(xml_file).replace(".xml", "")
                   results[name] = {
                       "tests":    int(suite.get("tests", 0)),
                       "failures": int(suite.get("failures", 0)),
                       "errors":   int(suite.get("errors", 0)),
                       "skipped":  int(suite.get("skipped", 0)),
-                      "time":     float(suite.get("time", 0)),
                   }
               except Exception as e:
                   print(f"Could not parse {xml_file}: {e}")
@@ -494,18 +489,13 @@ jobs:
           errors = sum(r["errors"]   for r in results.values())
           passed = total - fails - errors
 
-          print(f"TOTAL={total}")
-          print(f"PASSED={passed}")
-          print(f"FAILED={fails + errors}")
-
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"total={total}\n")
               f.write(f"passed={passed}\n")
               f.write(f"failed={fails + errors}\n")
-              f.write(f"summary={json.dumps(results)}\n")
-          EOF
+          PYEOF
 
-      - name: Comment PR with test results
+      - name: Comment PR with results
         uses: actions/github-script@v7
         env:
           TOTAL:  ${{ steps.parse.outputs.total }}
@@ -518,52 +508,53 @@ jobs:
             const failed = parseInt(process.env.FAILED || 0);
             const pct    = total > 0 ? Math.round((passed / total) * 100) : 0;
             const icon   = failed === 0 ? '✅' : '❌';
-            const spec_changed = '${{ needs.detect-spec-changes.outputs.spec_changed }}' === 'true';
+            const specChanged = '${{ needs.detect-spec-changes.outputs.spec_changed }}' === 'true';
 
-            const body = `## ${icon} API Test Results — auto-generated from OpenAPI spec
+            const body = [
+              `## ${icon} API Test Results — auto-generated from OpenAPI spec`,
+              ``,
+              `| Suite | Result |`,
+              `|---|---|`,
+              `| pytest (pet) | ${{ needs.pytest.result }} |`,
+              `| pytest (store) | ${{ needs.pytest.result }} |`,
+              `| pytest (user) | ${{ needs.pytest.result }} |`,
+              `| Schemathesis fuzzing | ${{ needs.schemathesis.result }} |`,
+              `| Newman / Postman | ${{ needs.newman.result }} |`,
+              ``,
+              `**${passed} / ${total} tests passed (${pct}%)**`,
+              specChanged
+                ? `> ⚠️ Spec changes detected — tests were auto-regenerated from updated spec.`
+                : `> ✓ No spec changes — existing committed test suite used.`,
+              failed > 0 ? `> ❌ **${failed} test(s) failed** — check workflow artifacts for details.` : '',
+              ``,
+              `<details><summary>How this pipeline works</summary>`,
+              ``,
+              `1. Detects if \`specs/*.yaml\` changed`,
+              `2. If changed → auto-regenerates pytest + Postman collection from spec`,
+              `3. Spins up \`swaggerapi/petstore3:unstable\` as a Docker service on port 8080`,
+              `4. Runs pytest (pet / store / user) in parallel against localhost:8080`,
+              `5. Runs Schemathesis property-based fuzzing against localhost:8080`,
+              `6. Runs Newman to validate the Postman collection against localhost:8080`,
+              `7. Posts this comment with aggregated JUnit results`,
+              ``,
+              `_[swagger-api/swagger-petstore](https://github.com/swagger-api/swagger-petstore) · [api-test-autogen](https://github.com/karun/api-test-autogen)_`,
+              `</details>`,
+            ].filter(l => l !== undefined).join('\n');
 
-            | Suite | Result |
-            |---|---|
-            | pytest (pet) | ${{ needs.pytest.result }} |
-            | pytest (store) | ${{ needs.pytest.result }} |
-            | pytest (user) | ${{ needs.pytest.result }} |
-            | Schemathesis fuzzing | ${{ needs.schemathesis.result }} |
-            | Newman / Postman | ${{ needs.newman.result }} |
-
-            **${passed} / ${total} tests passed (${pct}%)**
-            ${spec_changed ? '⚠️ Spec changes detected — tests were regenerated from updated spec.' : '✓ No spec changes — existing test suite used.'}
-            ${failed > 0 ? `\n> ⚠️ **${failed} test(s) failed** — check artifacts for details.` : ''}
-
-            <details>
-            <summary>How this pipeline works</summary>
-
-            1. Detects if \`specs/*.yaml\` changed
-            2. If changed → auto-regenerates pytest + Postman from the spec
-            3. Runs pytest across pet / store / user tags in parallel
-            4. Runs Schemathesis property-based fuzzing against staging
-            5. Runs Newman to validate the Postman collection
-            6. Posts this comment with aggregated results
-
-            _Generated by [api-test-autogen](https://github.com/karun/api-test-autogen)_
-            </details>`;
-
-            // Delete previous bot comment if exists
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo:  context.repo.repo,
               issue_number: context.issue.number,
             });
-            for (const comment of comments.data) {
-              if (comment.user.type === 'Bot' && comment.body.includes('API Test Results')) {
+            for (const c of comments.data) {
+              if (c.user.type === 'Bot' && c.body.includes('API Test Results')) {
                 await github.rest.issues.deleteComment({
                   owner: context.repo.owner,
                   repo:  context.repo.repo,
-                  comment_id: comment.id,
+                  comment_id: c.id,
                 });
               }
             }
-
-            // Post fresh comment
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo:  context.repo.repo,
@@ -571,8 +562,8 @@ jobs:
               body,
             });
 
-      - name: Fail if tests failed
+      - name: Fail pipeline if tests failed
         if: steps.parse.outputs.failed != '0'
         run: |
-          echo "::error::${{ steps.parse.outputs.failed }} test(s) failed. See reports for details."
+          echo "::error::${{ steps.parse.outputs.failed }} test(s) failed."
           exit 1

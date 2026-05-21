@@ -62,7 +62,7 @@ class TestCase:
         scenario_map = {
             "happy_path":       self._first_success_code(),
             "missing_required": 422,
-            "wrong_type":       422,
+            "wrong_type":       400,
             "invalid_enum":     400,
             "no_auth":          401,
             "boundary":         self._first_success_code(),
@@ -180,15 +180,25 @@ class SpecParser:
             return None
         return self._resolve_ref(schema)
 
-    def _resolve_ref(self, schema: dict) -> dict:
-        """Dereference a $ref to its component schema."""
+    def _resolve_ref(self, schema: dict, _visited: frozenset = frozenset()) -> dict:
+        """Recursively dereference all $refs in a schema, including nested ones."""
         if "$ref" in schema:
             ref_path = schema["$ref"]          # e.g. #/components/schemas/Pet
+            if ref_path in _visited:
+                return {}  # circular ref guard
             name = ref_path.split("/")[-1]
             resolved = self._schemas.get(name, {})
-            # recursively resolve nested $refs
-            return self._resolve_ref(resolved)
-        return schema
+            return self._resolve_ref(resolved, _visited | {ref_path})
+
+        result = dict(schema)
+        if "properties" in schema:
+            result["properties"] = {
+                k: self._resolve_ref(v, _visited)
+                for k, v in schema["properties"].items()
+            }
+        if "items" in schema:
+            result["items"] = self._resolve_ref(schema["items"], _visited)
+        return result
 
     # ── scenario generators ───────────────────
 

@@ -1,0 +1,182 @@
+[
+  {
+    "endpoint": "POST /user",
+    "name": "id_at_minimum_boundary",
+    "description": "Verify that id accepts the minimum valid value of 1 without rejection.",
+    "input_hint": "id = 1"
+  },
+  {
+    "endpoint": "POST /user",
+    "name": "username_at_length_boundaries",
+    "description": "Test username at exact minLength (3) and maxLength (50) boundary values.",
+    "input_hint": "username = 'abc' and username = 'a' repeated 50 times"
+  },
+  {
+    "endpoint": "POST /user",
+    "name": "password_below_minimum_length",
+    "description": "Verify that password with length 5 (below minLength of 6) is rejected.",
+    "input_hint": "password = '12345'"
+  },
+  {
+    "endpoint": "POST /user",
+    "name": "email_special_characters_in_local_part",
+    "description": "Test email format validation with special characters like plus signs and dots.",
+    "input_hint": "email = 'user+tag.name@email.com'"
+  },
+  {
+    "endpoint": "POST /user",
+    "name": "missing_required_versus_null_fields",
+    "description": "Verify different behavior when required fields are null vs completely omitted from request body.",
+    "input_hint": "username = null vs no username key present"
+  },
+  {
+    "endpoint": "GET /user/login",
+    "name": "missing_both_credentials",
+    "description": "Both username and password parameters are omitted from the request, testing if the API handles completely missing credentials gracefully.",
+    "input_hint": "GET /user/login with no query parameters"
+  },
+  {
+    "endpoint": "GET /user/login",
+    "name": "extremely_long_username",
+    "description": "Username parameter contains an extremely long string (e.g., 10000+ characters) to test for buffer overflow or input validation limits.",
+    "input_hint": "username with 10000+ characters"
+  },
+  {
+    "endpoint": "GET /user/login",
+    "name": "special_characters_in_credentials",
+    "description": "Username and password contain SQL injection, script injection, or special characters (e.g., ', \", <, >, &, %) to test encoding and sanitization.",
+    "input_hint": "username: admin' OR '1'='1, password: <script>alert(1)</script>"
+  },
+  {
+    "endpoint": "GET /user/login",
+    "name": "null_string_values",
+    "description": "Username and/or password parameters are set to literal 'null' strings or empty strings to test null-handling vs missing parameter distinction.",
+    "input_hint": "username=null&password=null or username=&password="
+  },
+  {
+    "endpoint": "GET /user/login",
+    "name": "concurrent_login_requests",
+    "description": "Multiple simultaneous login requests with the same credentials are sent to test for race conditions, session conflicts, or token collision.",
+    "input_hint": "Send 100+ concurrent GET requests with identical valid credentials"
+  },
+  {
+    "endpoint": "GET /user/logout",
+    "name": "concurrent_logout_requests_same_session",
+    "description": "Multiple simultaneous logout requests from the same session should be handled atomically to prevent race conditions or double-logout errors.",
+    "input_hint": "Send 5-10 parallel GET requests with identical session token within milliseconds"
+  },
+  {
+    "endpoint": "GET /user/logout",
+    "name": "logout_with_expired_token",
+    "description": "Attempting to logout with an already-expired authentication token should return appropriate error instead of 200 OK.",
+    "input_hint": "Use token with expiration timestamp in the past"
+  },
+  {
+    "endpoint": "GET /user/logout",
+    "name": "logout_with_invalid_token_format",
+    "description": "Logout with malformed or corrupted token should fail gracefully rather than cause server errors.",
+    "input_hint": "Send token with special characters, extremely long string (10000+ chars), or binary data"
+  },
+  {
+    "endpoint": "GET /user/logout",
+    "name": "logout_without_authentication_header",
+    "description": "Logout request missing authentication header entirely should be rejected, not treated as successful.",
+    "input_hint": "Omit Authorization header completely"
+  },
+  {
+    "endpoint": "GET /user/logout",
+    "name": "logout_already_logged_out_session",
+    "description": "Attempting to logout a session that was already logged out should handle idempotency correctly.",
+    "input_hint": "Call logout endpoint twice sequentially with same valid token"
+  },
+  {
+    "endpoint": "GET /user/{username}",
+    "name": "extremely_long_username_boundary",
+    "description": "Test with a username exceeding maximum allowed length to verify proper rejection or truncation behavior.",
+    "input_hint": "Username with 10000+ characters"
+  },
+  {
+    "endpoint": "GET /user/{username}",
+    "name": "special_characters_in_username",
+    "description": "Test with special characters like <, >, &, quotes, and unicode characters to verify proper escaping and validation.",
+    "input_hint": "Username containing '<script>', '%3Cscript%3E', or emoji characters"
+  },
+  {
+    "endpoint": "GET /user/{username}",
+    "name": "empty_string_username",
+    "description": "Test with an empty string as username to verify the API rejects it or handles it as invalid input.",
+    "input_hint": "Empty string or whitespace-only username"
+  },
+  {
+    "endpoint": "GET /user/{username}",
+    "name": "concurrent_requests_same_user",
+    "description": "Test multiple simultaneous requests for the same username to verify thread-safety and absence of race conditions.",
+    "input_hint": "10+ concurrent GET requests with identical username parameter"
+  },
+  {
+    "endpoint": "GET /user/{username}",
+    "name": "case_sensitivity_boundary",
+    "description": "Test if username lookup is case-sensitive by requesting 'John', 'john', and 'JOHN' separately.",
+    "input_hint": "Same username with different case variations"
+  },
+  {
+    "endpoint": "PUT /user/{username}",
+    "name": "username_minimum_length_boundary",
+    "description": "Test username with exactly 3 characters (minLength boundary) to verify minimum constraint is inclusive.",
+    "input_hint": "username in body = 'abc' (exactly 3 chars)"
+  },
+  {
+    "endpoint": "PUT /user/{username}",
+    "name": "username_maximum_length_boundary",
+    "description": "Test username with exactly 50 characters (maxLength boundary) to verify maximum constraint is inclusive.",
+    "input_hint": "username in body = 50-character string"
+  },
+  {
+    "endpoint": "PUT /user/{username}",
+    "name": "password_minimum_length_violation",
+    "description": "Test password with 5 characters (below minLength:6) to verify validation rejects undersized passwords.",
+    "input_hint": "password = '12345' (5 chars, below minimum)"
+  },
+  {
+    "endpoint": "PUT /user/{username}",
+    "name": "id_zero_and_negative_boundary",
+    "description": "Test id with 0 and negative values to verify minimum:1 constraint is enforced.",
+    "input_hint": "id = 0 or id = -1"
+  },
+  {
+    "endpoint": "PUT /user/{username}",
+    "name": "special_characters_in_string_fields",
+    "description": "Test firstName, lastName, and username with SQL injection, script tags, and unicode characters to verify input sanitization.",
+    "input_hint": "firstName = \"<script>alert(1)</script>\" or username = \"admin'; DROP TABLE users;--\""
+  },
+  {
+    "endpoint": "DELETE /user/{username}",
+    "name": "delete_user_with_sql_injection_payload",
+    "description": "Verify the API properly sanitizes username parameter to prevent SQL injection attacks.",
+    "input_hint": "username = \"admin' OR '1'='1\""
+  },
+  {
+    "endpoint": "DELETE /user/{username}",
+    "name": "delete_user_with_extremely_long_username",
+    "description": "Test behavior when username exceeds maximum length constraints (e.g., 10000+ characters).",
+    "input_hint": "username = repeated string of 10000+ characters"
+  },
+  {
+    "endpoint": "DELETE /user/{username}",
+    "name": "delete_user_with_url_encoded_special_chars",
+    "description": "Verify handling of special characters like %, /, &, ? that require URL encoding in path parameters.",
+    "input_hint": "username = \"user%2Fadmin\" or \"user&admin\" or \"user?test\""
+  },
+  {
+    "endpoint": "DELETE /user/{username}",
+    "name": "delete_nonexistent_user_returns_404",
+    "description": "Confirm the API returns proper 404 status when attempting to delete a user that does not exist.",
+    "input_hint": "username = \"nonexistent_user_12345\""
+  },
+  {
+    "endpoint": "DELETE /user/{username}",
+    "name": "concurrent_delete_requests_same_user",
+    "description": "Test race condition behavior when two delete requests target the same user simultaneously.",
+    "input_hint": "Send 2+ concurrent DELETE requests with identical username parameter"
+  }
+]
