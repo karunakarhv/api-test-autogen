@@ -385,7 +385,6 @@ jobs:
             --reporter-htmlextra-title "Petstore API — Newman Results" \
             --timeout-request 10000 \
             --delay-request 200 \
-            --bail \
             || true
         continue-on-error: true
 
