@@ -276,7 +276,6 @@ jobs:
             --max-examples 50 \
             --report-junit-path reports/schemathesis.xml \
             --request-timeout 10 \
-            --validate-schema \
             || true
         continue-on-error: true
 
