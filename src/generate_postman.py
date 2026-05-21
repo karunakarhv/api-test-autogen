@@ -351,7 +351,7 @@ def build_collection(spec_path: str) -> tuple[dict, dict]:
     # Read spec metadata
     info = parser.spec.get("info", {})
     servers = parser.spec.get("servers", [{}])
-    base_url = servers[0].get("url", "http://localhost:8080/api/v3")
+    base_url = servers[0].get("url", "http://localhost:8080/api/v3").rstrip("/")
 
     # Group items by tag
     folders: dict[str, list] = {}
