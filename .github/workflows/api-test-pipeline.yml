@@ -274,7 +274,7 @@ jobs:
             --url "$API_BASE_URL" \
             --checks all \
             --max-examples 50 \
-            --junit-xml reports/schemathesis.xml \
+            --report-junit-path reports/schemathesis.xml \
             --timeout 10 \
             --validate-schema \
             || true
