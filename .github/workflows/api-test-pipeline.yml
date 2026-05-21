@@ -12,13 +12,17 @@ on:
         required: false
         default: "true"
         type: choice
-        options: ["true", "false"]
+        options:
+          - "true"
+          - "false"
       run_llm_enrichment:
         description: "Run LLM edge case enrichment?"
         required: false
         default: "false"
         type: choice
-        options: ["true", "false"]
+        options:
+          - "true"
+          - "false"
 
 # Cancel in-progress runs on the same branch
 concurrency:
