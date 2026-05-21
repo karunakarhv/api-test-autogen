@@ -33,7 +33,7 @@ env:
   PYTHON_VERSION: "3.11"
   # swagger-api/swagger-petstore runs on port 8080
   # Docs: https://github.com/swagger-api/swagger-petstore
-  API_BASE_URL: "http://localhost:8080"
+  API_BASE_URL: "http://localhost:8080/api/v3"
   API_KEY: ${{ secrets.API_KEY }}
   COVERAGE_THRESHOLD: 80
 
